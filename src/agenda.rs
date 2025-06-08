@@ -14,7 +14,7 @@ pub fn agenda(eleccion: u8) {
 
         5 => println!("Saliste!"),
 
-        _ => print!("Porfavor seleccione una opcion valida (1 - 4)"),
+        _ => mostrar_opciones(),
     }
 }
 
@@ -79,7 +79,7 @@ pub struct Contacto {
     _id: Uuid,
 }
 
-fn mostrar_opciones() {
+pub fn mostrar_opciones() {
     print!("\x1B[2J\x1B[1;1H");
     print!(
         "Que desea hacer (Seleccione el numero de la opcion deseada): \n1. Añadir contacto\n2. Editar contacto\n3. Borrar contacto.\n4. Mostrar contactos\n5. Salir.\n"
