@@ -1,56 +1,14 @@
 [
   {
-    "nombre": "Carlos",
-    "apellido": "Pimentel",
-    "numero_telefono": "8497072688",
-    "_id": "fd781990-fc3f-422e-80d6-7955ed6a340d"
-  },
-  {
-    "nombre": "Juan",
-    "apellido": "Perez",
-    "numero_telefono": "6547920923",
-    "_id": "8fcf605d-36a0-4afe-84d6-5bf80943e31d"
-  },
-  {
     "nombre": "Nicolas",
-    "apellido": "Rodriguez",
-    "numero_telefono": "6452850185",
-    "_id": "6f7d764b-b5ad-4ddf-8481-e79bcf51ef9a"
-  },
-  {
-    "nombre": "Joe",
-    "apellido": "Mota",
-    "numero_telefono": "1234567890",
-    "_id": "0ad0dc25-5ade-400b-8510-84879ad68186"
-  },
-  {
-    "nombre": "Jesus",
-    "apellido": "Guzman",
-    "numero_telefono": "1234567899",
-    "_id": "88ea5961-d71a-46ed-9cb8-529b973878e5"
-  },
-  {
-    "nombre": "Jorge",
-    "apellido": "Rodriguez",
-    "numero_telefono": "12345678900",
-    "_id": "17d1a21a-e38d-4518-8a7e-5815db74bf72"
-  },
-  {
-    "nombre": "Juan",
-    "apellido": "Ochoa",
+    "apellido": "Nunez",
     "numero_telefono": "0987654321",
-    "_id": "97976be3-1c73-430e-a43c-cfa6e58677bd"
+    "_id": "63889495-86c5-4c13-a4f1-647dd2e64b75"
   },
   {
-    "nombre": "Duarte",
-    "apellido": "Martinez",
-    "numero_telefono": "1234554321",
-    "_id": "72beb388-0dcc-466d-8145-655662eb3caa"
-  },
-  {
-    "nombre": "Pablo",
-    "apellido": "Diaz",
-    "numero_telefono": "0987667890",
-    "_id": "1bf0500a-7df6-4a4f-bbe6-b50a61a0d9c5"
+    "nombre": "Pimentel",
+    "apellido": "Andujar",
+    "numero_telefono": "8497072688",
+    "_id": "0702288d-c1f8-4077-9001-db1def88ab47"
   }
 ]

@@ -50,7 +50,7 @@ fn añadir_contacto() {
     let mut telefono = String::new();
     telefono = obtener_input(&mut telefono).trim().to_string();
 
-    if telefono.is_empty() || telefono.len() < 10 || !telefono.chars().all(|c| c.is_numeric()) {
+    if telefono.is_empty() || telefono.len() <= 9 || !telefono.chars().all(|c| c.is_numeric()) {
         mostrar_opciones();
         println!(
             "El telefono debe tener 10 numeros y no debe contener letras ni numeros. Ejemplo: 1234567890"
@@ -61,7 +61,7 @@ fn añadir_contacto() {
         nombre: nombre.trim().to_string(),
         apellido: apellido.trim().to_string(),
         numero_telefono: telefono.trim().to_string(),
-        _id: Uuid::new_v4(),
+        _id: Some(Uuid::new_v4()),
     };
 
     contactos.push(contacto);
@@ -71,32 +71,103 @@ fn añadir_contacto() {
 }
 
 fn editar_contacto() {
+    let filename = String::from("contactos.json");
+    let mut contactos = read_json(&filename);
+    let mut input = String::new();
+    println!("Coloque el numero del contacto a editar: ");
+    let telefono = obtener_input(&mut input).trim().to_string();
+    let contacto_a_editar = match contactos
+        .iter_mut()
+        .find(|contacto| contacto.numero_telefono == *telefono)
+    {
+        Some(contacto) => contacto,
+        None => {
+            println!("Numero inexistente!");
+            return;
+        }
+    };
+
+    let contactos_sin_edicion = read_json(&filename);
+    let mut contactos_sin_editar = contactos_sin_edicion
+        .iter()
+        .filter(|contacto| contacto.numero_telefono != telefono)
+        .collect::<Vec<_>>();
+    input = String::from("");
+    println!("\x1B[2J\x1B[1;1H");
+    println!(
+        "Seleccione la opcion que desea editar del contacto:\n1. Todo el contacto\n 2. El nombre\n 3. El apellido\n 4. El numero\n "
+    );
+    let opciones = obtener_input(&mut input).trim().parse::<u8>();
+    if opciones == Ok(1) {
+        let mut nombre = String::new();
+        println!("Coloque el nombre: ");
+        nombre = obtener_input(&mut nombre).trim().to_string();
+        let mut apellido = String::new();
+        println!("Coloque el apellido: ");
+        apellido = obtener_input(&mut apellido).trim().to_string();
+        let mut telefono = String::new();
+        println!("Coloque el telefono: ");
+        telefono = obtener_input(&mut telefono).trim().to_string();
+
+        contacto_a_editar.set_all_contact(nombre, apellido, telefono);
+    }
+    if opciones == Ok(2) {
+        let mut nombre = String::new();
+        println!("Coloque el nombre: ");
+        nombre = obtener_input(&mut nombre).trim().to_string();
+        contacto_a_editar.set_nombre(nombre);
+    }
+    if opciones == Ok(3) {
+        let mut apellido = String::new();
+        println!("Coloque el apellido: ");
+        apellido = obtener_input(&mut apellido).trim().to_string();
+        contacto_a_editar.set_apellido(apellido);
+    }
+    if opciones == Ok(4) {
+        let mut telefono = String::new();
+        println!("Coloque el telefono: ");
+        telefono = obtener_input(&mut telefono).trim().to_string();
+        contacto_a_editar.set_telefono(telefono);
+    }
+    contactos_sin_editar.push(contacto_a_editar);
+
+    let contacto_parsed = serde_json::to_string_pretty(&contactos_sin_editar).unwrap();
+    let mut file = File::create(filename).unwrap();
+    let _ = file.write_all(contacto_parsed.as_bytes());
+
     mostrar_opciones();
-    println!("Editar");
 }
 
 fn borrar_contacto() {
+    let filename = String::from("contactos.json");
+    println!("Coloque el numero del contacto a eliminar: ");
+    let mut telefono = String::new();
+    let all_contacts = read_json(&filename);
+    telefono = obtener_input(&mut telefono).trim().to_string();
+    let contacto_filtrado = all_contacts
+        .iter()
+        .filter(|contacto| contacto.numero_telefono != telefono)
+        .collect::<Vec<_>>();
+    let contacto_parsed = serde_json::to_string_pretty(&contacto_filtrado).unwrap();
+    let mut file = File::create(filename).unwrap();
+    let _ = file.write_all(contacto_parsed.as_bytes());
+
     mostrar_opciones();
-    println!("Borrar");
 }
 
 fn mostrar_contactos() {
     let contactos = read_json("contactos.json");
     mostrar_opciones();
+
+    if contactos.is_empty() {
+        println!("No hay contactos!")
+    }
     for contacto in contactos {
         println!(
             "Nombre: {}\nApellido: {}\nTelefono: {}\n",
             contacto.nombre, contacto.apellido, contacto.numero_telefono
         );
     }
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct Contacto {
-    nombre: String,
-    apellido: String,
-    numero_telefono: String,
-    _id: Uuid,
 }
 
 pub fn mostrar_opciones() {
@@ -148,4 +219,31 @@ fn read_json(filename: &str) -> Vec<Contacto> {
     let contactos: Vec<Contacto> = serde_json::from_str(&fdata).unwrap();
 
     return contactos;
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+
+pub struct Contacto {
+    nombre: String,
+    apellido: String,
+    numero_telefono: String,
+    _id: Option<Uuid>,
+}
+
+impl Contacto {
+    fn set_nombre(&mut self, nombre: String) {
+        self.nombre = nombre;
+    }
+    fn set_apellido(&mut self, apellido: String) {
+        self.apellido = apellido;
+    }
+    fn set_telefono(&mut self, telefono: String) {
+        self.numero_telefono = telefono;
+    }
+
+    fn set_all_contact(&mut self, nombre: String, apellido: String, telefono: String) {
+        self.nombre = nombre;
+        self.apellido = apellido;
+        self.numero_telefono = telefono;
+    }
 }
